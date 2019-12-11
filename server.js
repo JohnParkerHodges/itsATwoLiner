@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 
 const PORT = process.env.PORT || 3000;
 
-const db = require("./models");
+const Workout = require("./models/Workout");
 
 const app = express();
 
@@ -27,19 +27,20 @@ app.get("/notes", (req, res) => {
         });
 });
 
+// app.create("")
+
 
 
 app.post("/submit", ({ body }, res) => {
-    db.Note.create(body)
-        .then(({ _id }) => db.User.findOneAndUpdate({}, { $push: { notes: _id } }, { new: true }))
-        .then(dbUser => {
-            res.json(dbUser);
+    const newWorkOut = new Workout(body);
+    Workout.create(newWorkOut)
+        .then(WorkoutDB => {
+            res.json(WorkoutDB)
         })
         .catch(err => {
             res.json(err);
-        });
+        })
 });
-
 
 
 app.listen(PORT, () => {
